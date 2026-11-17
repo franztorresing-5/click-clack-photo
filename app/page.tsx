@@ -21,11 +21,11 @@ const siteConfig = {
 
   // Categorías del portafolio (Fotos destacadas)
   portfolio: [
-    { title: "Retratos de Estudio", category: "Retrato", imagePath: "/ftdes/1.jpeg" },
-    { title: "Sesiones de Pareja", category: "Parejas", imagePath: "/ftdes/2.jpeg" },
-    { title: "Bodas & Eventos", category: "Eventos", imagePath: "/ftdes/3.jpeg" },
-    { title: "Bodas & Eventos", category: "Eventos", imagePath: "/ftdes/4.jpeg" },
-    { title: "Moda & Editorial", category: "Conceptual", imagePath: "/ftdes/5.jpeg" }
+    { title: "Retratos de Estudio", category: "Retrato", imagePath: "/ftdes/1.webp" },
+    { title: "Sesiones de Pareja", category: "Parejas", imagePath: "/ftdes/2.webp" },
+    { title: "Bodas & Eventos", category: "Eventos", imagePath: "/ftdes/3.webp" },
+    { title: "Bodas & Eventos", category: "Eventos", imagePath: "/ftdes/4.webp" },
+    { title: "Moda & Editorial", category: "Conceptual", imagePath: "/ftdes/5.webp" }
   ],
 
   // Próximos eventos o locaciones especiales del fotógrafo
@@ -144,7 +144,7 @@ const Hero = () => (
         </h1>
 
         <Image
-          src="/90d.png"
+          src="/90d.webp"
           alt="Logotipo Sarhè Consultores"
           width={800}
           height={800}
