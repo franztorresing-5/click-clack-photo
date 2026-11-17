@@ -28,7 +28,8 @@ type Api = { open: (index: number) => void; close: () => void };
 
 const css = `
 .cg-stage{height:100vh;height:100svh}
-.cg-clip,.cg-pic{transition:transform .6s cubic-bezier(.22,1,.36,1)}
+.cg-clip{transition:width .45s cubic-bezier(.22,1,.36,1),height .45s cubic-bezier(.22,1,.36,1),inset .45s cubic-bezier(.22,1,.36,1),transform .45s cubic-bezier(.22,1,.36,1)}
+.cg-pic{transition:transform .6s cubic-bezier(.22,1,.36,1)}
 @media (hover:hover){
   .cg-btn:hover .cg-clip{transform:scale(.88,.95)}
   .cg-btn:hover .cg-pic{transform:scale(1.2045,1.1158)}
@@ -106,6 +107,7 @@ export default function CounterGallery({ items, heading }: { items: GalleryItem[
     let dir = 0; // 1 abriendo, -1 cerrando, 0 quieto
     let sel = -1;
     let geo: Geo[] = [];
+    let expandedClip: { index: number; width: number; height: number } | null = null;
     let savedScroll = 0;
     let locked = false;
 
@@ -130,9 +132,14 @@ export default function CounterGallery({ items, heading }: { items: GalleryItem[
     };
 
     const clearTimeline = () => {
+      expandedClip = null;
       buttons.forEach((b) => {
         b.style.transform = '';
         b.style.opacity = '';
+        const image = b.querySelector('img');
+        if (image) image.style.objectFit = '';
+        const clip = b.querySelector<HTMLElement>('.cg-clip');
+        if (clip) clip.style.cssText = '';
       });
       columns.forEach((c) => (c.style.zIndex = ''));
       headingEl.style.transform = '';
@@ -149,6 +156,22 @@ export default function CounterGallery({ items, heading }: { items: GalleryItem[
         const e = easeInOutExpo(clamp((t - g.delay) / g.dur, 0, 1));
         buttons[k].style.transform = `translate3d(${g.dx * e}px,${g.dy * e}px,0) scale(${1 + (g.s - 1) * e})`;
         buttons[k].style.opacity = g.fade ? String(1 - e) : '1';
+      }
+      if (expandedClip) {
+        const shapeProgress = clamp((p - 0.62) / 0.38, 0, 1);
+        const selected = buttons[expandedClip.index];
+        const clip = selected.querySelector<HTMLElement>('.cg-clip');
+        const image = selected.querySelector('img');
+        if (shapeProgress > 0 && clip) {
+          clip.style.inset = '50% auto auto 50%';
+          clip.style.width = `${selected.offsetWidth + (expandedClip.width - selected.offsetWidth) * shapeProgress}px`;
+          clip.style.height = `${selected.offsetHeight + (expandedClip.height - selected.offsetHeight) * shapeProgress}px`;
+          clip.style.transform = 'translate(-50%, -50%)';
+          if (image) image.style.objectFit = shapeProgress > 0.02 ? 'contain' : '';
+        } else {
+          if (clip) clip.style.cssText = '';
+          if (image) image.style.objectFit = '';
+        }
       }
       const eh = easeInOutExpo(clamp(t / DURATION, 0, 1));
       headingEl.style.transform = `translate3d(0,${eh * 300}%,0) scaleY(${1 + 3 * eh})`;
@@ -254,9 +277,27 @@ export default function CounterGallery({ items, heading }: { items: GalleryItem[
       // Por defecto, las fotos fuera de pantalla se desvanecen
       geo = buttons.map(() => ({ dx: 0, dy: 0, s: 1, delay: 0, dur: DURATION, fade: true }));
 
-      // Foto elegida: al centro, ajustada a 62 % del alto o 86 % del ancho (lo menor)
+      // Foto elegida: se muestra completa, con más espacio para el título en móvil.
       const sr = rects[index];
-      const scale = Math.min((0.62 * sh) / sr.height, (0.86 * sw) / sr.width);
+      const mobile = sw < 640;
+      const image = buttons[index].querySelector('img');
+      const imageRatio = image?.naturalWidth && image?.naturalHeight
+        ? image.naturalWidth / image.naturalHeight
+        : sr.width / sr.height;
+      const maxHeight = sh * (mobile ? 0.5 : 0.68);
+      const maxWidth = sw * (mobile ? 0.9 : 0.86);
+      const imageWidth = Math.min(maxWidth, maxHeight * imageRatio);
+      const imageHeight = imageWidth / imageRatio;
+      const scale = Math.min(imageWidth / sr.width, imageHeight / sr.height);
+      const clip = buttons[index].querySelector<HTMLElement>('.cg-clip');
+      if (clip) {
+        // La proporción de la foto entra después de que la tarjeta y las columnas se acomodan.
+        expandedClip = { index, width: imageWidth / scale, height: imageHeight / scale };
+        clip.style.inset = '50% auto auto 50%';
+        clip.style.width = `${buttons[index].offsetWidth}px`;
+        clip.style.height = `${buttons[index].offsetHeight}px`;
+        clip.style.transform = 'translate(-50%, -50%)';
+      }
       geo[index] = {
         dx: cx - (sr.left + sr.width / 2),
         dy: cy - (sr.top + sr.height / 2),
@@ -402,7 +443,7 @@ export default function CounterGallery({ items, heading }: { items: GalleryItem[
                             src={ph.item.imagePath}
                             alt=""
                             fill
-                            sizes="(max-width: 639px) 29vw, 24vw"
+                            sizes={openIdx === ph.key ? '90vw' : '(max-width: 639px) 29vw, 24vw'}
                             draggable={false}
                             loading="lazy"
                             decoding="async"
@@ -427,7 +468,7 @@ export default function CounterGallery({ items, heading }: { items: GalleryItem[
           </div>
 
           {/* Título de la foto abierta */}
-          <div className="pointer-events-none absolute inset-x-0 top-22 z-30 flex justify-center px-6">
+          <div className="pointer-events-none absolute inset-x-0 top-22 sm:left-200 sm:top-40 z-30 flex justify-center px-6">
             <p
               ref={titleRef}
               aria-hidden={!isOpen}
@@ -445,7 +486,7 @@ export default function CounterGallery({ items, heading }: { items: GalleryItem[
             inert={!isOpen}
             onClick={() => apiRef.current?.close()}
             style={{ opacity: 0, pointerEvents: isOpen ? 'auto' : 'none' }}
-            className="absolute bottom-22 left-1/2 z-30 -translate-x-1/2 cursor-pointer rounded-full bg-white px-5 py-2.5 text-xs font-bold tracking-wider text-black uppercase transition-colors hover:bg-[#DBDBDB] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:top-22 sm:bottom-auto sm:left-8 sm:translate-x-0"
+            className="absolute bottom-22 left-1/2 z-30 -translate-x-1/2 cursor-pointer rounded-full bg-white px-5 py-2.5 text-xs font-bold tracking-wider text-black uppercase transition-colors hover:bg-[#DBDBDB] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:top-40 sm:bottom-auto sm:left-8 sm:translate-x-0"
           >
             Volver
           </button>

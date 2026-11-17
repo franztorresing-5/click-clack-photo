@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react';
+import Image from 'next/image';
 
 const navLinks = [
   { href: '#inicio', label: 'Inicio' },
@@ -26,11 +27,18 @@ export default function Navbar({ bookingHref }: { bookingHref: string }) {
   return (
     <header className={`fixed top-0 z-50 w-full transition-colors duration-300 ${scrolled ? 'border-b border-[#616161]/30 bg-[#8A8A8A]/90 py-4 backdrop-blur-md' : 'bg-transparent py-6'}`}>
       <div className="container mx-auto flex items-center justify-between px-6">
-        <a href="#inicio" onClick={closeMenu} className="font-serif text-xl tracking-widest text-white uppercase">
-          CLICK<span className="text-[#616161]">CLACKphoto</span>
+        <a href="#inicio" aria-label="ClickClack Photo, ir al inicio" onClick={closeMenu} className="shrink-0">
+          <Image
+            src="/clickclackphotowhite.png"
+            alt="ClickClack Photo"
+            width={691}
+            height={435}
+            sizes="(min-width: 768px) 7rem, 6rem"
+            className="h-auto w-24 object-contain md:w-35"
+            preload
+          />
         </a>
-
-        <nav aria-label="Navegación principal" className="hidden items-center gap-8 text-sm font-medium text-[#DBDBDB] md:flex">
+        <nav aria-label="Navegación principal" className="hidden items-center gap-8 text-xl font-medium text-[#ece4e4] md:flex">
           {navLinks.map((link) => (
             <a key={link.href} href={link.href} className="transition-colors hover:text-white">{link.label}</a>
           ))}
