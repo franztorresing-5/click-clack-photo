@@ -1,10 +1,8 @@
-'use client';
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, Menu, X, Camera, Sparkles, Phone, Mail } from 'lucide-react';
+import {  MessageCircle, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 import CounterGallery from './components/CounterGallery';
 import EventsCascade from './components/EventsCascade';
+import Navbar from './components/Navbar';
 
 // ==========================================
 // 1. CONFIGURACIÓN CENTRALIZADA (CLICKCLACK PHOTO)
@@ -14,7 +12,7 @@ const siteConfig = {
   tagline: "Capturamos la esencia de tus momentos más importantes.",
   description: "Estudio de fotografía profesional especializado en retratos, sesiones conceptuales, bodas y eventos especiales.",
   whatsapp: {
-    number: "5215555555555", // Reemplaza con el número real del estudio
+    number: "5215533112528", // Reemplaza con el número real del estudio
     message: "Hola ClickClack Photo, vi su página web y me gustaría solicitar información sobre sus paquetes de fotografía.",
   },
   instagramUrl: "https://www.instagram.com/clickclack_photo/",
@@ -60,84 +58,16 @@ const getWhatsAppLink = (customMsg?: string) => {
 // 2. COMPONENTES DE LA PÁGINA
 // ==========================================
 
-const Navbar = () => {
-  const [scrolled, setScrolled] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  return (
-    <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-[#8A8A8A]/90 backdrop-blur-md border-b border-[#616161]/30 py-4' : 'bg-transparent py-6'}`}>
-      <div className="container mx-auto px-6 flex justify-between items-center">
-        <a href="#" className="text-xl font-serif text-white tracking-widest uppercase">
-          CLICK<span className="text-[#616161]">CLACKphoto</span>
-        </a>
-
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex gap-8 items-center text-sm font-medium text-[#DBDBDB]">
-          <a href="#inicio" className="hover:text-white transition-colors">Inicio</a>
-          <a href="#portafolio" className="hover:text-white transition-colors">Portafolio</a>
-          <a href="#eventos" className="hover:text-white transition-colors">Próximos Eventos</a>
-          <a href="#contacto" className="hover:text-white transition-colors">Contacto</a>
-          <a
-            href={getWhatsAppLink()}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-5 py-2.5 bg-white text-black hover:bg-[#DBDBDB] rounded-full transition-colors font-bold text-xs uppercase tracking-wider"
-          >
-            Agendar Sesión
-          </a>
-        </nav>
-
-        {/* Mobile Toggle */}
-        <button className="md:hidden text-white" onClick={() => setIsOpen(!isOpen)}>
-          {isOpen ? <X size={28} /> : <Menu size={28} />}
-        </button>
-      </div>
-
-      {/* Mobile Nav */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden absolute top-full left-0 w-full bg-[#1c1c1c] border-b border-[#616161]/30 py-6 px-6 flex flex-col gap-4 shadow-2xl"
-          >
-            <a href="#inicio" onClick={() => setIsOpen(false)} className="text-[#DBDBDB] hover:text-white">Inicio</a>
-            <a href="#portafolio" onClick={() => setIsOpen(false)} className="text-[#DBDBDB] hover:text-white">Portafolio</a>
-            <a href="#eventos" onClick={() => setIsOpen(false)} className="text-[#DBDBDB] hover:text-white">Próximos Eventos</a>
-            <a href="#contacto" onClick={() => setIsOpen(false)} className="text-[#DBDBDB] hover:text-white">Contacto</a>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </header>
-  );
-};
-
 const Hero = () => (
   <section id="inicio" className="relative min-h-screen flex items-center justify-center bg-[#8A8A8A] overflow-hidden pt-20">
     {/* Fondo decorativo con gradiente y efecto neutro */}
     <div className="absolute inset-0 bg-linear-to-b from-[#616161]/20 via-[#1c1c1c]/50 to-[#0f0f0f] pointer-events-none" />
 
     <div className="container mx-auto px-6 pb-10 relative z-10 text-center max-w-4xl flex flex-col items-center">
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#616161]/30 border border-[#8A8A8A]/40 text-[#DBDBDB] text-xs font-medium tracking-widest uppercase mb-6"
-      >
+      <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#616161]/30 border border-[#8A8A8A]/40 text-[#DBDBDB] text-xs font-medium tracking-widest uppercase mb-6">
         <Sparkles size={14} /> Estudio Fotográfico Deportivo
-      </motion.div>
-      <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-      className="flex  w-full flex-col lg:flex-row items-center  gap-5">
+      </div>
+      <div className="flex w-full flex-col items-center gap-5 lg:flex-row">
         <h1 className="text-4xl md:text-7xl lg:w-[30%] font-bold text-white mb-6 tracking-tight leading-tight"
         >
           CLICK CLACK <span className="text-transparent bg-clip-text bg-linear-to-r from-[#FFFFFF] via-[#DBDBDB] to-[#8A8A8A]">PHOTO.</span>
@@ -145,44 +75,47 @@ const Hero = () => (
 
         <Image
           src="/90d.webp"
-          alt="Logotipo Sarhè Consultores"
+          alt="ClickClack Photo"
           width={800}
           height={800}
-          className="md:w-[70%] lg:w-28rem lg:pl-40 h-auto object-contain drop-shadow-2xl"
-          priority
+          className="h-auto object-contain drop-shadow-2xl md:w-[70%] lg:w-28rem"
+          sizes="(min-width: 1024px) 28rem, (min-width: 768px) 70vw, 100vw"
+          preload
         />
-      </motion.div>
+      </div>
 
-      <motion.p
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        className="text-base md:text-xl text-[#B3B3B3] mb-10 max-w-2xl font-light leading-relaxed"
-      >
+      <p className="mb-10 max-w-2xl text-base leading-relaxed font-light text-[#B3B3B3] md:text-xl">
         {siteConfig.description}
-      </motion.p>
+      </p>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.3 }}
-        className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"
-      >
+      <div className="flex w-full flex-col gap-4 sm:w-auto sm:flex-row">
         <a
           href={getWhatsAppLink()}
           target="_blank"
           rel="noopener noreferrer"
-          className="px-8 py-4 bg-white text-black hover:bg-[#DBDBDB] rounded-full font-medium transition-colors text-center shadow-lg"
+          className="px-8 py-4 bg-white text-black hover:bg-[#DBDBDB] rounded-full font-bold text-3xl transition-colors text-center shadow-lg"
         >
           Cotizar Sesión
         </a>
         <a
           href="#portafolio"
-          className="px-8 py-4 bg-[#616161]/20 hover:bg-[#616161]/40 text-white rounded-full font-medium transition-colors border border-[#616161]/40 text-center"
+          className="px-8 py-4 bg-[#616161]/20 hover:bg-[#616161]/40 text-white rounded-full font-bold text-3xl transition-colors border border-[#616161]/40 text-center"
         >
           Ver Portafolio
         </a>
-      </motion.div>
+        <a
+          href={siteConfig.instagramUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Visitar Instagram de ClickClack Photo"
+          className="inline-flex items-center justify-center gap-2 rounded-full border border-[#616161]/40 bg-[#616161]/20 px-8 py-4 text-center font-medium text-white transition-colors hover:bg-[#616161]/40"
+        >
+          <svg className="w-10 h-10 fill-current" viewBox="0 0 24 24">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                </svg>
+        </a>
+
+      </div>
     </div>
   </section>
 );
@@ -207,7 +140,7 @@ const Events = () => (
     {/* Las tarjetas entran en cascada con el scroll (ver components/EventsCascade.tsx) */}
     <EventsCascade
       events={siteConfig.upcomingEvents}
-      getLink={(event) => getWhatsAppLink(`Hola, me interesa apartar mi lugar para el evento: ${event.title}`)}
+      whatsappNumber={siteConfig.whatsapp.number}
       skipHref="#contacto"
       skipLabel="Saltar a Contacto"
     >
@@ -266,13 +199,13 @@ const Footer = () => (
 );
 
 const WhatsAppFloating = () => (
-  <div className="fixed bottom-6 right-6 z-50">
+  <div className="fixed right-6 bottom-6 z-50">
     <a
-      href="https://wa.me/525667885958?text=Hola,%20me%20gustaría%mas%20informacion,%20por%20favor."
+      href={getWhatsAppLink()}
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-26 right-10 z-50 bg-emerald-600 hover:bg-emerald-500 text-white p-3 rounded-full shadow-2xl transition-all duration-300 hover:scale-120 flex items-center justify-center"
-      title="Contáctanos por WhatsApp"
+      aria-label="Contactar a ClickClack Photo por WhatsApp"
+      className="flex items-center justify-center rounded-full bg-emerald-600 p-3 text-white shadow-2xl transition-transform duration-300 hover:scale-110 hover:bg-emerald-500 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
     >
       {/* Puedes usar un ícono de WhatsApp de lucide-react o SVG */}
       <svg className="w-7 h-7 fill-current" viewBox="0 0 24 24">
@@ -289,7 +222,7 @@ const WhatsAppFloating = () => (
 export default function Home() {
   return (
     <main className="bg-[#111111] min-h-screen text-white font-sans selection:bg-white selection:text-black scroll-smooth">
-      <Navbar />
+      <Navbar bookingHref={getWhatsAppLink()} />
       <Hero />
       <Portfolio />
       <Events />

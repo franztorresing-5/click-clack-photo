@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import Image from 'next/image';
 
 // ==========================================
 // GALERÍA "COLUMNAS CONTRARIAS" (Detour)
@@ -397,16 +398,14 @@ export default function CounterGallery({ items, heading }: { items: GalleryItem[
                               [ Foto: {ph.item.category} ]
                             </span>
                           </span>
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
+                          <Image
                             src={ph.item.imagePath}
                             alt=""
+                            fill
+                            sizes="(max-width: 639px) 29vw, 24vw"
                             draggable={false}
                             loading="lazy"
                             decoding="async"
-                            onError={(e) => {
-                              e.currentTarget.style.display = 'none';
-                            }}
                             className="absolute inset-0 h-full w-full object-cover"
                           />
                         </span>

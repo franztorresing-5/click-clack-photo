@@ -19,7 +19,7 @@ export type EventCard = { date: string; title: string; location: string; status:
 
 type Props = {
   events: EventCard[];
-  getLink: (event: EventCard) => string;
+  whatsappNumber: string;
   skipHref: string;
   skipLabel: string;
   /** Encabezado de la sección (título y texto), se queda fijo dentro del marco */
@@ -60,7 +60,7 @@ const css = `
 }
 `;
 
-export default function EventsCascade({ events, getLink, skipHref, skipLabel, children }: Props) {
+export default function EventsCascade({ events, whatsappNumber, skipHref, skipLabel, children }: Props) {
   const runwayRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<HTMLDivElement>(null);
   const fitRef = useRef<HTMLDivElement>(null);
@@ -230,7 +230,7 @@ export default function EventsCascade({ events, getLink, skipHref, skipLabel, ch
                     </div>
 
                     <a
-                      href={getLink(event)}
+                      href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hola, me interesa apartar mi lugar para el evento: ${event.title}`)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#333] py-2.5 text-center text-xs font-bold tracking-wider text-white uppercase transition-all hover:bg-white hover:text-black sm:py-3"
